@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Food Calc App</title>
+</head>
+<body>
+  <h1>Калькулятор калорий</h1>
+
+  <h2>Регистрация</h2>
+  <form id="register-form">
+    <input type="text" id="register-username" placeholder="Имя пользователя" required><br>
+    <input type="password" id="register-password" placeholder="Пароль" required><br>
+    <input type="password" id="register-confirm" placeholder="Повторите пароль" required><br>
+    <button type="submit">Зарегистрироваться</button>
+  </form>
+
+  <h2>Вход</h2>
+  <form id="login-form">
+    <input type="text" placeholder="Имя пользователя" required><br>
+    <input type="password" placeholder="Пароль" required><br>
+    <button type="submit">Войти</button>
+  </form>
+
+<script>
+const API_URL = 'https://food-calc-app.onrender.com';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const registerForm = document.getElementById('register-form');
+  const loginForm = document.getElementById('login-form');
+
+  if (registerForm) {
+    registerForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('register-username').value.trim();
+      const password = document.getElementById('register-password').value;
+      const confirm = document.getElementById('register-confirm').value;
+
+      if (!username || !password || password !== confirm) {
+        alert('Проверьте корректность данных');
+        return;
+      }
+
+      fetch(`${API_URL}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      .then(res => res.json())
+      .then(data => alert(data.message))
+      .catch(() => alert('Ошибка подключения к серверу'));
+    });
+  }
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = loginForm.querySelector('input[type="text"]').value.trim();
+      const password = loginForm.querySelector('input[type="password"]').value;
+
+      fetch(`${API_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      .then(res => res.json())
+      .then(data => alert(data.message))
+      .catch(() => alert('Ошибка подключения к серверу'));
+    });
+  }
+});
+</script>
+
+</body>
+</html>
